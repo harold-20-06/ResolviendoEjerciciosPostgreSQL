@@ -221,4 +221,16 @@ order by p.precio desc, p.nombre asc
 select f.id,f.nombre from producto p, fabricante f where p.id_fabricante = f.id group by f.id 
 --
 select f.id,f.nombre from producto p inner join fabricante f on p.id_fabricante = f.id group by f.id 
---Fin Consultas multitabla
+--Fin Consultas Multitabla (Composición interna)
+
+--Consultas Multitabla (Composición externa)
+--Consultas utilizando LEFT JOIN y RIGHT JOIN.
+
+--Devuelve un listado de todos los fabricantes que existen en la base de datos, junto con los productos que 
+--tiene cada uno de ellos. El listado deberá mostrar también aquellos fabricantes que no tienen producto sasociados.
+select * from producto p right join fabricante f on p.id_fabricante = f.id
+--Devuelve un listado donde sólo aparezcan aquellos fabricantes que no tienen ningún producto asociado.
+select * from producto p right join fabricante f on p.id_fabricante = f.id where p.id is null
+--¿Pueden existir productos que no estén relacionados con un fabricante? Justifique su respuesta.
+no pueden existir por que el campo id_fabricante es NOT NULL.
+--Consultas Multitabla (Composición externa)
