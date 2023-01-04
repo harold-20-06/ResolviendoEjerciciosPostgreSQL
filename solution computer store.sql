@@ -147,3 +147,78 @@ select nombre,precio from producto where nombre like '%Monitor%' and precio <215
 --nombre (en orden ascendente).
 select nombre, precio from producto where precio >=180 order by precio desc, nombre asc
 --Fin Consultas sobre una tabla
+
+
+--Consultas multitabla (Composición interna)
+--Utilizando sintaxis SQL1 y SQL2.
+
+
+--Devuelve una lista con el nombre del producto, precio y nombre de fabricante de todos los productos de la base de datos.
+select p.nombre, p.precio, f.nombre from producto p, fabricante f where p.id_fabricante = f.id;
+--
+select p.nombre, p.precio, f.nombre from producto p inner join fabricante f on p.id_fabricante = f.id;
+--Devuelve una lista con el nombre del producto, precio y nombre de fabricante de todos los productos de la base de datos. 
+--Ordene el resultado por el nombre del fabricante, por orden alfabético.
+select p.nombre as nombre_producto, p.precio, f.nombre as nombre_fabricante from producto p,fabricante f 
+where p.id_fabricante = f.id order by f.nombre asc;
+--
+select p.nombre as nombre_producto, p.precio, f.nombre as nombre_fabricante from producto p inner join fabricante f 
+on p.id_fabricante = f.id order by f.nombre asc
+
+--Devuelve una lista con el identificador del producto, nombre del producto, identificador del 
+--fabricante y nombre del fabricante, de todos los productos de la base de datos.
+select p.id, p.nombre, f.id, f.nombre from producto p, fabricante f where f.id = p.id_fabricante
+--
+select p.id, p.nombre, f.id, f.nombre from producto p inner join fabricante f on f.id = p.id_fabricante
+--Devuelve el nombre del producto, su precio y el nombre de su fabricante, del producto más barato.
+select p.nombre, p.precio, f.nombre from producto p, fabricante f where p.id_fabricante = f.id
+and p.precio = (select min(precio) from producto)
+--
+select p.nombre, p.precio, f.nombre from producto p inner join fabricante f on p.id_fabricante = f.id
+and p.precio = (select min(precio) from producto)   
+--Devuelve el nombre del producto, su precio y el nombre de su fabricante, del producto más caro.
+select p.nombre, p.precio, f.nombre from producto p, fabricante f where p.id_fabricante = f.id
+and p.precio = (select max(precio) from producto)
+--
+select p.nombre, p.precio, f.nombre from producto p inner join fabricante f on p.id_fabricante = f.id
+and p.precio = (select max(precio) from producto)   
+
+--Devuelve una lista de todos los productos del fabricante Lenovo.
+select p.nombre,p.precio, f.nombre from producto p, fabricante f where p.id_fabricante = f.id
+and f.nombre = 'Lenovo'
+--
+select p.nombre,p.precio, f.nombre from producto p inner join fabricante f on p.id_fabricante = f.id
+and f.nombre = 'Lenovo'
+
+--Devuelve una lista de todos los productos del fabricante Crucial que tengan un precio mayor que 200€.
+select * from producto p, fabricante f where p.id_fabricante = f.id and f.nombre ='Crucial' and p.precio >200
+--
+select * from producto p inner join fabricante f on p.id_fabricante = f.id and f.nombre ='Crucial' and p.precio >200
+--Devuelve un listado con todos los productos de los fabricantes Asus, Hewlett-Packard y Seagate. Sin utilizar el operador IN.
+select * from producto p, fabricante f where p.id_fabricante = f.id and (f.nombre ='Asus' or f.nombre ='Hewlett-Packard' or f.nombre ='Seagate')
+--
+select * from producto p inner join fabricante f on p.id_fabricante = f.id and (f.nombre ='Asus' or f.nombre ='Hewlett-Packard' or f.nombre ='Seagate')
+--Devuelve un listado con todos los productos de los fabricantes Asus, Hewlett-Packardy Seagate. Utilizando el operador IN.
+select * from producto p, fabricante f where p.id_fabricante = f.id and f.nombre in ('Asus','Hewlett-Packard','Seagate')
+--
+select * from producto p inner join fabricante f on p.id_fabricante = f.id and f.nombre in ('Asus','Hewlett-Packard','Seagate')
+--Devuelve un listado con el nombre y el precio de todos los productos de los fabricantes cuyo nombre termine por la vocal e.
+select p.nombre,p.precio,f.nombre from producto p, fabricante f where p.id_fabricante = f.id and f.nombre like '%e'
+--
+select p.nombre,p.precio,f.nombre from producto p inner join fabricante f on p.id_fabricante = f.id and f.nombre like '%e'
+--Devuelve un listado con el nombre y el precio de todos los productos cuyo nombre de fabricante contenga el carácter w en su nombre.
+select p.nombre,p.precio,f.nombre from producto p, fabricante f where p.id_fabricante = f.id and f.nombre like '%w%'
+--
+select p.nombre,p.precio,f.nombre from producto p inner join fabricante f on p.id_fabricante = f.id and f.nombre like '%w%'
+--Devuelve un listado con el nombre de producto, precio y nombre de fabricante, de todos los productos que tengan un precio mayor o igual a 180€. 
+--Ordene el resultado en primer lugar por el precio (en orden descendente) y en segundo lugar por el nombre (en orden ascendente)
+select p.nombre,p.precio,f.nombre from producto p, fabricante f where p.id_fabricante = f.id and p.precio >= 180
+order by p.precio desc, p.nombre asc
+--
+select p.nombre,p.precio,f.nombre from producto p inner join fabricante f on p.id_fabricante = f.id and p.precio >= 180
+order by p.precio desc, p.nombre asc
+--Devuelve un listado con el identificador y el nombre de fabricante, solamente de aquellos fabricantes que tienen productos asociados en la base de datos.
+select f.id,f.nombre from producto p, fabricante f where p.id_fabricante = f.id group by f.id 
+--
+select f.id,f.nombre from producto p inner join fabricante f on p.id_fabricante = f.id group by f.id 
+--Fin Consultas multitabla
