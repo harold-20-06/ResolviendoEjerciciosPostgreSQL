@@ -133,3 +133,132 @@ select e.nombre, e.apellido1, e.apellido2, e.nif from empleado e inner join depa
 --Lista los nombres, apellidos y nif de los empleados que trabajan en los departamentos 2, 4 o 5.
 select e.nombre, e.apellido1, e.apellido2, e.nif from empleado e inner join departamento d on e.id_departamento = d.id where e.id_departamento in (2,4,5)
 
+--Consultas multitabla (Composición interna)
+
+--Resuelva todas las consultas utilizando la sintaxis de SQL1 y SQL2.
+
+--1. Devuelve un listado con los empleados y los datos de los departamentos donde trabaja cada uno.
+select * from empleado e inner join departamento d on e.id_departamento = d.id 
+--2. Devuelve un listado con los empleados y los datos de los departamentos donde trabaja cada uno. Ordena el resultado, en primer lugar por el nombre del departamento (en orden alfabético) y en segundo lugar por los apellidos y el nombre de los empleados.
+select * from empleado e inner join departamento d on e.id_departamento = d.id order by d.nombre, e.apellido1, e.apellido2, e.nombre 
+--3. Devuelve un listado con el identificador y el nombre del departamento, solamente de aquellos departamentos que tienen empleados.
+select distinct d.id,d.nombre from empleado e inner join departamento d on e.id_departamento = d.id
+--4. Devuelve un listado con el identificador, el nombre del departamento y el valor del presupuesto actual del que dispone, solamente de aquellos departamentos que tienen empleados. El valor del presupuesto actual lo puede calcular restando al valor del presupuesto inicial (columna presupuesto) el valor de los gastos que ha generado (columna gastos).
+select distinct d.id,d.nombre, (d.presupuesto-gastos) as presupuesto  from empleado e inner join departamento d 
+on e.id_departamento = d.id
+--5. Devuelve el nombre del departamento donde trabaja el empleado que tiene el nif 38382980M.
+select d.nombre from empleado e inner join departamento d 
+on e.id_departamento = d.id
+where e.nif = '38382980M'
+--6. Devuelve el nombre del departamento donde trabaja el empleado Pepe Ruiz Santana.
+select d.nombre from empleado e inner join departamento d 
+on e.id_departamento = d.id
+where e.nombre = 'Pepe' and apellido1 = 'Ruiz' and apellido2 = 'Santana'
+--7. Devuelve un listado con los datos de los empleados que trabajan en el departamento de I+D. Ordena el resultado alfabéticamente.
+select * from empleado e inner join departamento d on e.id_departamento = d.id 
+where d.nombre = 'I+D' order by e.nombre asc
+--8. Devuelve un listado con los datos de los empleados que trabajan en el departamento de Sistemas, Contabilidad o I+D. Ordena el resultado alfabéticamente.
+select * from empleado e inner join departamento d on e.id_departamento = d.id
+where d.nombre in ('Sistemas','Contabilidad','I+D') order by e.nombre asc
+--9. Devuelve una lista con el nombre de los empleados que tienen los departamentos que no tienen un presupuesto entre 100000 y 200000 euros.
+select * from empleado e inner join departamento d on e.id_departamento = d.id
+where presupuesto not between 100000 and 200000
+--10. Devuelve un listado con el nombre de los departamentos donde existe algún empleado cuyo segundo apellido sea NULL. Tenga en cuenta que no debe mostrar nombres de departamentos que estén repetidos.
+select distinct d.nombre from empleado e inner join departamento d on e.id_departamento = d.id
+where e.apellido2 is null
+--Consultas multitabla (Composición externa)
+
+--Resuelva todas las consultas utilizando las cláusulas LEFT JOIN y RIGHT JOIN.
+
+--1. Devuelve un listado con todos los empleados junto con los datos de los departamentos donde trabajan. Este listado también debe incluir los empleados que no tienen ningún departamento asociado.
+select * from empleado e left join departamento d on e.id_departamento = d.id
+--2. Devuelve un listado donde sólo aparezcan aquellos empleados que no tienen ningún departamento asociado.
+select e.* from empleado e left join departamento d on e.id_departamento = d.id
+where d.id is null
+--3. Devuelve un listado donde sólo aparezcan aquellos departamentos que no tienen ningún empleado asociado.
+select d.* from empleado e right join departamento d on e.id_departamento = d.id
+where e.id is null
+--4. Devuelve un listado con todos los empleados junto con los datos de los departamentos donde trabajan. El listado debe incluir los empleados que no tienen ningún departamento asociado y los departamentos que no tienen ningún empleado asociado. Ordene el listado alfabéticamente por el nombre del departamento.
+select * from empleado e full outer join departamento d on e.id_departamento = d.id
+order by d.nombre asc
+--5. Devuelve un listado con los empleados que no tienen ningún departamento asociado y los departamentos que no tienen ningún empleado asociado. Ordene el listado alfabéticamente por el nombre del departamento.
+select * from empleado e full outer join departamento d on e.id_departamento = d.id
+where e.id is null or d.id is null
+
+--Consultas resumen
+select * from departamento
+--1. Calcula la suma del presupuesto de todos los departamentos.
+select sum(presupuesto) from departamento d 
+--2. Calcula la media del presupuesto de todos los departamentos.
+select avg(presupuesto) from departamento
+--3. Calcula el valor mínimo del presupuesto de todos los departamentos.
+select min(presupuesto) from departamento 
+--4. Calcula el nombre del departamento y el presupuesto que tiene asignado, del departamento con menor presupuesto.
+select nombre, presupuesto from departamento where presupuesto = (select min(presupuesto) from departamento)
+--5. Calcula el valor máximo del presupuesto de todos los departamentos.
+select max(presupuesto) from departamento
+--6. Calcula el nombre del departamento y el presupuesto que tiene asignado, del departamento con mayor presupuesto.
+select nombre, presupuesto from departamento where presupuesto = (select max(presupuesto) from departamento)
+--7. Calcula el número total de empleados que hay en la tabla empleado.
+select count(id) from empleado
+--8. Calcula el número de empleados que no tienen NULL en su segundo apellido.
+select count(apellido2) from empleado
+--9. Calcula el número de empleados que hay en cada departamento. Tienes que devolver dos columnas, una con el nombre del departamento y otra con el número de empleados que tiene asignados.
+select d.nombre, count(e.id) from empleado e inner join departamento d on e.id_departamento = d.id
+group by d.nombre
+--10. Calcula el nombre de los departamentos que tienen más de 2 empleados. El resultado debe tener dos columnas, una con el nombre del departamento y otra con el número de empleados que tiene asignados.
+select d.nombre, count(e.id) from empleado e inner join departamento d on e.id_departamento = d.id
+group by d.nombre having count(e.id) > 2  
+--11. Calcula el número de empleados que trabajan en cada uno de los departamentos. El resultado de esta consulta también tiene que incluir aquellos departamentos que no tienen ningún empleado asociado.
+select d.nombre, count(e.id) from empleado e right join departamento d on e.id_departamento = d.id
+group by d.nombre
+--12. Calcula el número de empleados que trabajan en cada unos de los departamentos que tienen un presupuesto mayor a 200000 euros.
+select d.nombre, count(e.id) from empleado e inner join departamento d on e.id_departamento = d.id
+where d.presupuesto > 200000
+group by d.nombre
+--Subconsultas
+
+--Con operadores básicos de comparación
+
+--1. Devuelve un listado con todos los empleados que tiene el departamento de Sistemas. (Sin utilizar INNER JOIN).
+select * from empleado e, departamento d 
+where e.id_departamento = d.id 
+and d.id = '2'  
+--2. Devuelve el nombre del departamento con mayor presupuesto y la cantidad que tiene asignada.
+select nombre, presupuesto from departamento 
+where presupuesto = (select max(presupuesto) from departamento)
+--3. Devuelve el nombre del departamento con menor presupuesto y la cantidad que tiene asignada.
+select nombre, presupuesto from departamento 
+where presupuesto = (select min(presupuesto) from departamento)
+
+--Subconsultas con ALL y ANY
+
+--4. Devuelve el nombre del departamento con mayor presupuesto y la cantidad que tiene asignada. Sin hacer uso de MAX, ORDER BY ni LIMIT.
+select nombre, presupuesto from departamento 
+where presupuesto >= all (select presupuesto from departamento )
+--5. Devuelve el nombre del departamento con menor presupuesto y la cantidad que tiene asignada. Sin hacer uso de MIN, ORDER BY ni LIMIT.
+select nombre, presupuesto from departamento 
+where presupuesto <= all (select presupuesto from departamento )
+--6. Devuelve los nombres de los departamentos que tienen empleados asociados. (Utilizando ALL o ANY).
+select nombre from departamento 
+where id = any(select id_departamento from empleado)
+--7. Devuelve los nombres de los departamentos que no tienen empleados asociados. (Utilizando ALL o ANY).
+select nombre from departamento 
+where id <> all(select id_departamento from empleado where id_departamento is not null)
+--Subconsultas con IN y NOT IN
+
+--8. Devuelve los nombres de los departamentos que tienen empleados asociados. (Utilizando IN o NOT IN).
+select nombre from departamento 
+where id in (select id_departamento from empleado)
+--9. Devuelve los nombres de los departamentos que no tienen empleados asociados. (Utilizando IN o NOT IN).
+select nombre from departamento 
+where id not in (select id_departamento from empleado where id_departamento is not null)
+
+--Subconsultas con EXISTS y NOT EXISTS
+
+--10. Devuelve los nombres de los departamentos que tienen empleados asociados. (Utilizando EXISTS o NOT EXISTS).
+select d.nombre from departamento d
+where exists (select id_departamento from empleado e where e.id_departamento = d.id)
+--11. Devuelve los nombres de los departamentos que tienen empleados asociados. (Utilizando EXISTS o NOT EXISTS).
+select d.nombre from departamento d
+where not exists (select id_departamento from empleado e where e.id_departamento = d.id)
