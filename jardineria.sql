@@ -937,3 +937,169 @@ INSERT INTO pago VALUES (30,'PayPal','ak-std-000024','2009-01-16',7863);
 INSERT INTO pago VALUES (35,'PayPal','ak-std-000025','2007-10-06',3321);
 INSERT INTO pago VALUES (38,'PayPal','ak-std-000026','2006-05-26',1171);
 
+--Consultas sobre una tabla
+
+--1. Devuelve un listado con el código de oficina y la ciudad donde hay oficinas.
+select codigo_oficina, ciudad from oficina
+--2. Devuelve un listado con la ciudad y el teléfono de las oficinas de España.
+select ciudad, telefono from oficina where pais = 'España'
+--3. Devuelve un listado con el nombre, apellidos y email de los empleados cuyo jefe tiene un código de jefe igual a 7.
+select nombre,apellido1, apellido2,email from empleado where codigo_jefe = 7
+--4. Devuelve el nombre del puesto, nombre, apellidos y email del jefe de la empresa.
+select puesto,nombre,apellido1,apellido2,email from empleado where codigo_jefe is null
+--5. Devuelve un listado con el nombre, apellidos y puesto de aquellos empleados que no sean representantes de ventas.
+select nombre,apellido1, apellido2,puesto from empleado where puesto != 'Representante Ventas'
+--6. Devuelve un listado con el nombre de los todos los clientes españoles.
+select * from cliente where pais = 'Spain'
+--7. Devuelve un listado con los distintos estados por los que puede pasar un pedido.
+select distinct estado from pedido 
+--8. Devuelve un listado con el código de cliente de aquellos clientes que realizaron algún pago en 2008. 
+--Tenga en cuenta que deberá eliminar aquellos códigos de cliente que aparezcan repetidos. 
+--Resuelva la consulta:
+--Utilizando la función YEAR.
+select codigo_cliente from pago where extract(year from fecha_pago) = 2008
+--9. Devuelve un listado con el código de pedido, código de cliente, 
+--fecha esperada y fecha de entrega de los pedidos que no han sido entregados a tiempo.
+select codigo_pedido,codigo_cliente,fecha_esperada,fecha_entrega from pedido
+where fecha_entrega is not null
+and fecha_entrega > fecha_esperada
+--10. Devuelve un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de 
+--los pedidos cuya fecha de entrega ha sido al menos dos días antes de la fecha esperada.
+--Utilizando la función ADDDATE de MySQL en postgreSQL interval 'x day'.
+select codigo_pedido,codigo_cliente,fecha_esperada,fecha_entrega from pedido
+where fecha_entrega is not null
+and fecha_entrega = fecha_esperada - INTERVAL '2 day'
+--Utilizando la función DATEDIFF de MySQL, en postgresql date_part.
+select codigo_pedido,codigo_cliente,fecha_esperada,fecha_entrega from pedido
+where fecha_entrega is not null
+and DATE_PART('day', fecha_esperada::timestamp - fecha_entrega::timestamp) = 2
+--11. Devuelve un listado de todos los pedidos que fueron rechazados en 2009.
+select * from pedido where estado = 'Rechazado' and extract(year from fecha_pedido) = 2009
+--12. Devuelve un listado de todos los pedidos que han sido entregados en el mes de enero de cualquier año.
+select * from pedido where estado = 'Entregado' and extract (month from fecha_pedido) = 01
+--13. Devuelve un listado con todos los pagos que se realizaron en el año 2008 mediante Paypal. 
+--Ordene el resultado de mayor a menor.
+select * from pago
+where extract(year from fecha_pago) = 2008 and forma_pago = 'PayPal'
+order by total desc
+--14. Devuelve un listado con todas las formas de pago que aparecen en la tabla pago. Tenga en cuenta que no deben aparecer formas de pago repetidas.
+select distinct forma_pago from pago  
+--15. Devuelve un listado con todos los productos que pertenecen a la gama Ornamentales y que tienen más de 
+--100 unidades en stock. El listado deberá estar ordenado por su precio de venta, mostrando en primer lugar 
+--los de mayor precio.
+select * from producto where gama = 'Ornamentales' and cantidad_en_stock >100
+order by precio_venta desc
+--16. Devuelve un listado con todos los clientes que sean de la ciudad de Madrid y 
+--cuyo representante de ventas tenga el código de empleado 11 o 30.
+select * from cliente where ciudad = 'Madrid' and codigo_empleado_rep_ventas in (11,30) 
+
+--Consultas multitabla (Composición interna)
+
+--Resuelva todas las consultas utilizando la sintaxis de SQL1 y SQL2. Las consultas con sintaxis de SQL2 se deben resolver con INNER JOIN y NATURAL JOIN.
+
+--1. Obtén un listado con el nombre de cada cliente y el nombre y apellido de su representante de ventas.
+select distinct c.nombre_cliente, e.nombre, e.apellido1, e.apellido2 from cliente c inner join empleado e on c.codigo_empleado_rep_ventas = e.codigo_empleado  
+--2. Muestra el nombre de los clientes que hayan realizado pagos junto con el nombre de sus representantes de ventas.
+select distinct c.nombre_cliente, e.nombre, e.apellido1, e.apellido2 from cliente c inner join empleado e on c.codigo_empleado_rep_ventas = e.codigo_empleado
+natural join pago
+--3. Muestra el nombre de los clientes que no hayan realizado pagos junto con el nombre de sus representantes de ventas.
+select c.nombre_cliente, e.nombre, e.apellido1, e.apellido2 from cliente c left join pago p on c.codigo_cliente = p.codigo_cliente
+inner join empleado e on e.codigo_empleado = c.codigo_empleado_rep_ventas
+where p.codigo_cliente is null
+--4. Devuelve el nombre de los clientes que han hecho pagos y el nombre de sus representantes junto con la 
+--ciudad de la oficina a la que pertenece el representante.
+select distinct c.nombre_cliente, e.nombre, e.apellido1, e.apellido2 
+from cliente c inner join pago p on c.codigo_cliente = p.codigo_cliente
+inner join empleado e on e.codigo_empleado = c.codigo_empleado_rep_ventas
+inner join oficina o on o.codigo_oficina = e.codigo_oficina
+--5. Devuelve el nombre de los clientes que no hayan hecho pagos y el nombre de sus representantes junto con
+--la ciudad de la oficina a la que pertenece el representante.
+select distinct c.nombre_cliente, e.nombre, e.apellido1, e.apellido2 
+from cliente c left join pago p on c.codigo_cliente = p.codigo_cliente
+inner join empleado e on e.codigo_empleado = c.codigo_empleado_rep_ventas
+inner join oficina o on o.codigo_oficina = e.codigo_oficina
+where p.codigo_cliente is null
+--6. Lista la dirección de las oficinas que tengan clientes en Fuenlabrada.
+select distinct o.linea_direccion1 from cliente c inner join empleado e on c.codigo_empleado_rep_ventas = e.codigo_empleado
+inner join oficina o on o.codigo_oficina = e.codigo_oficina 
+where c.ciudad = 'Fuenlabrada'
+--7. Devuelve el nombre de los clientes y el nombre de sus representantes junto con la ciudad de la oficina a la que pertenece el representante.
+select distinct  c.nombre_cliente, e.nombre, o.ciudad from cliente c inner join empleado e on c.codigo_empleado_rep_ventas = e.codigo_empleado
+inner join oficina o on o.codigo_oficina = e.codigo_oficina 
+--8. Devuelve un listado con el nombre de los empleados junto con el nombre de sus jefes.
+select e1.codigo_empleado,e1.nombre, e1.codigo_jefe, e2.nombre from empleado e1, empleado e2
+where e1.codigo_jefe = e2.codigo_empleado 
+--9. Devuelve un listado que muestre el nombre de cada empleados, el nombre de su jefe y 
+--el nombre del jefe de sus jefe.
+select e1.codigo_empleado,e1.nombre, e1.codigo_jefe, e2.nombre, e2.codigo_jefe, e3.nombre 
+from empleado e1, empleado e2,empleado e3
+where e1.codigo_jefe = e2.codigo_empleado 
+and e2.codigo_jefe = e3.codigo_empleado 
+--10. Devuelve el nombre de los clientes a los que no se les ha entregado a tiempo un pedido.
+select * from cliente c natural join pedido p
+where fecha_entrega <= fecha_esperada
+--11. Devuelve un listado de las diferentes gamas de producto que ha comprado cada cliente.
+select distinct gama, codigo_cliente, nombre_cliente
+from pedido natural join detalle_pedido
+natural join producto 
+natural join gama_producto 
+natural join cliente 
+order by codigo_cliente 
+
+--Consultas multitabla (Composición externa)
+
+--Resuelva todas las consultas utilizando las cláusulas LEFT JOIN, RIGHT JOIN, NATURAL LEFT JOIN y NATURAL RIGHT JOIN.
+
+--1. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
+select c.* from cliente c natural left join pago p where p.codigo_cliente is null 
+--2. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pedido.
+select c.* from cliente c natural left join pedido p where p.codigo_cliente is null
+--3. Devuelve un listado que muestre los clientes que no han realizado ningún pago y los que no han realizado ningún pedido.
+select c.* from cliente c natural left join pago pa
+natural left join pedido pe 
+where pa.codigo_cliente is null
+and pe.codigo_cliente is null
+--4. Devuelve un listado que muestre solamente los empleados que no tienen una oficina asociada.
+select e.* from empleado e natural left join oficina o where o.codigo_oficina is null  
+--5. Devuelve un listado que muestre solamente los empleados que no tienen un cliente asociado.
+select e.* from empleado e left join cliente  c 
+on e.codigo_empleado = c.codigo_empleado_rep_ventas
+where c.codigo_empleado_rep_ventas is null   
+--6. Devuelve un listado que muestre solamente los empleados que no tienen un cliente asociado junto con los datos de la oficina donde trabajan.
+select e.*,o.* from empleado  e left join cliente c
+on e.codigo_empleado = c.codigo_empleado_rep_ventas
+inner join oficina o
+on o.codigo_oficina = e.codigo_oficina
+where c.codigo_empleado_rep_ventas is null   
+--7. Devuelve un listado que muestre los empleados que no tienen una oficina asociada y los que no tienen un cliente asociado.
+select e.* from empleado e natural left join oficina o 
+left join cliente  c 
+on e.codigo_empleado = c.codigo_empleado_rep_ventas
+where c.codigo_empleado_rep_ventas is null
+and o.codigo_oficina is null  
+--8. Devuelve un listado de los productos que nunca han aparecido en un pedido.
+select p.* from producto p left join detalle_pedido d on p.codigo_producto = d.codigo_producto
+where d.codigo_producto is null
+--9. Devuelve un listado de los productos que nunca han aparecido en un pedido. El resultado debe mostrar el nombre, la descripción y la imagen del producto.
+select  p.nombre, g.descripcion_texto, g.imagen from producto p left join detalle_pedido d on p.codigo_producto = d.codigo_producto
+inner join gama_producto g on g.gama = p.gama 
+where d.codigo_producto is null
+--10. Devuelve las oficinas donde no trabajan ninguno de los empleados que hayan sido los representantes de
+--ventas de algún cliente que haya realizado la compra de algún producto de la gama Frutales.
+select * from oficina
+where codigo_oficina <> all(select o.codigo_oficina from empleado e inner join oficina o on o.codigo_oficina = e.codigo_oficina
+inner join cliente c on e.codigo_empleado = c.codigo_empleado_rep_ventas
+inner join pedido p  on c.codigo_cliente = p.codigo_cliente
+inner join detalle_pedido d on p.codigo_pedido = d.codigo_pedido
+inner join producto pr on d.codigo_producto = pr.codigo_producto
+where pr.gama = 'Frutales'
+order by o.codigo_oficina )
+
+--11. Devuelve un listado con los clientes que han realizado algún pedido pero no han realizado ningún pago.
+select c.* from pago p right join cliente c on c.codigo_cliente = p.codigo_cliente
+inner join pedido pe on c.codigo_cliente = pe.codigo_cliente
+where p.codigo_cliente is null 
+--12. Devuelve un listado con los datos de los empleados que no tienen clientes asociados y el nombre de su jefe asociado.
+select e.*, em.nombre JEFE from empleado e left join cliente c on e.codigo_empleado = c.codigo_empleado_rep_ventas
+inner join empleado em on e.codigo_jefe = em.codigo_empleado
+where c.codigo_empleado_rep_ventas is null
