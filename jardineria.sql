@@ -1103,3 +1103,169 @@ where p.codigo_cliente is null
 select e.*, em.nombre JEFE from empleado e left join cliente c on e.codigo_empleado = c.codigo_empleado_rep_ventas
 inner join empleado em on e.codigo_jefe = em.codigo_empleado
 where c.codigo_empleado_rep_ventas is null
+
+--Consultas resumen
+
+--1. ¿Cuántos empleados hay en la compañía?
+select count(*) from empleado
+--2. ¿Cuántos clientes tiene cada país?
+select count(codigo_cliente),pais from cliente
+group by pais
+--3. ¿Cuál fue el pago medio en 2009?
+select avg(total) from pago
+where extract(year from fecha_pago) = '2009'
+--4. ¿Cuántos pedidos hay en cada estado? Ordena el resultado de forma descendente por el número de pedidos.
+select count(codigo_pedido) as cantidad ,estado from pedido
+group by estado 
+order by cantidad desc
+--5. Calcula el precio de venta del producto más caro y más barato en una misma consulta.
+select max(precio_venta) maximo_Precio, min(precio_venta) minimo_precio from producto
+--6. Calcula el número de clientes que tiene la empresa.
+select count(codigo_cliente) from cliente 
+--7. ¿Cuántos clientes existen con domicilio en la ciudad de Madrid?
+select count(codigo_cliente) from cliente 
+where ciudad = 'Madrid'
+--8. ¿Calcula cuántos clientes tiene cada una de las ciudades que empiezan por M?
+select count(codigo_cliente),ciudad from cliente 
+where ciudad like 'M%'
+group by ciudad
+--9. Devuelve el nombre de los representantes de ventas y el número de clientes al que atiende cada uno.
+select codigo_empleado_rep_ventas,e.nombre, count(codigo_cliente) from cliente c inner join empleado e
+on codigo_empleado = codigo_empleado_rep_ventas 
+group by codigo_empleado_rep_ventas, e.nombre
+order by codigo_empleado_rep_ventas
+--10. Calcula el número de clientes que no tiene asignado representante de ventas.
+select count(codigo_cliente) from cliente where codigo_empleado_rep_ventas is null
+--11. Calcula la fecha del primer y último pago realizado por cada uno de los clientes. 
+--El listado deberá mostrar el nombre y los apellidos de cada cliente.
+select codigo_cliente, nombre_contacto, apellido_contacto, min(fecha_pago) primer_pago, max(fecha_pago) ultimo_pago from cliente natural inner join pago
+group by codigo_cliente
+order by codigo_cliente
+ --12. Calcula el número de productos diferentes que hay en cada uno de los pedidos.
+select codigo_pedido,count(codigo_producto) from detalle_pedido
+group by codigo_pedido 
+--13. Calcula la suma de la cantidad total de todos los productos que aparecen en cada uno de los pedidos.
+select codigo_pedido, sum(cantidad) from detalle_pedido
+group by codigo_pedido 
+--14. Devuelve un listado de los 20 productos más vendidos y el número total de unidades que se han vendido 
+--de cada uno. El listado deberá estar ordenado por el número total de unidades vendidas.
+select codigo_producto, sum(cantidad) unidades_vendidas from detalle_pedido
+group by codigo_producto
+order by unidades_vendidas desc
+limit 20
+--15. La facturación que ha tenido la empresa en toda la historia, indicando la base imponible, el IVA y el 
+--total facturado. La base imponible se calcula sumando el coste del producto por el número de unidades 
+--vendidas de la tabla detalle_pedido. El IVA es el 21 % de la base imponible, y el total la suma de los dos 
+--campos anteriores.
+select sum((precio_unidad) * cantidad) base_imponible, ((sum((precio_unidad) * cantidad))* 0.21) IVA, (sum((precio_unidad) * cantidad)) + (((sum((precio_unidad) * cantidad))* 0.21))total from detalle_pedido
+--16. La misma información que en la pregunta anterior, pero agrupada por código de producto.
+select codigo_producto,sum((precio_unidad) * cantidad) base_imponible, ((sum((precio_unidad) * cantidad))* 0.21) IVA, (sum((precio_unidad) * cantidad)) + (((sum((precio_unidad) * cantidad))* 0.21))total from detalle_pedido
+group by codigo_producto
+--17. La misma información que en la pregunta anterior, pero agrupada por código de producto filtrada por los códigos que empiecen por OR.
+select codigo_producto,sum((precio_unidad) * cantidad) base_imponible, ((sum((precio_unidad) * cantidad))* 0.21) IVA, (sum((precio_unidad) * cantidad)) + (((sum((precio_unidad) * cantidad))* 0.21)) total from detalle_pedido
+where codigo_producto like 'OR%'
+group by codigo_producto
+--18. Lista las ventas totales de los productos que hayan facturado más de 3000 euros. Se mostrará el nombre, 
+--unidades vendidas, total facturado y total facturado con impuestos (21% IVA).
+select codigo_producto, nombre, sum(cantidad) unidades, sum(cantidad * precio_unidad) Total_facturado, (sum((precio_unidad) * cantidad)) + (((sum((precio_unidad) * cantidad))* 0.21)) total_facturado_mas_impuestos from detalle_pedido natural inner join producto
+group by codigo_producto, nombre
+having sum(cantidad * precio_unidad) > 3000
+--19. Muestre la suma total de todos los pagos que se realizaron para cada uno de los años que aparecen en la
+--tabla pagos.
+select extract (year from fecha_pago) total_pagos, sum(total) from pago
+group by extract (year from fecha_pago)
+order by total_pagos 
+--Subconsultas
+
+--Con operadores básicos de comparación
+
+--1. Devuelve el nombre del cliente con mayor límite de crédito.
+select nombre_cliente from cliente
+where limite_credito = (select max(limite_credito) from cliente)
+--2. Devuelve el nombre del producto que tenga el precio de venta más caro.
+select nombre from producto w, sum(cantidad)here precio_venta = (select max(precio_venta) from producto)
+--3. Devuelve el nombre del producto del que se han vendido más unidades. (Tenga en cuenta que tendrá que 
+--calcular cuál es el número total de unidades que se han vendido de cada producto a partir de los datos de 
+--la tabla detalle_pedido)
+/*select max(unidades) as maximo from producto natural inner join (select codigo_producto, sum(cantidad) unidades from detalle_pedido
+group by codigo_producto
+) as sumas
+
+select codigo_producto, max(sum(cantidad)) unidades from detalle_pedido
+group by codigo_producto
+order by unidades desc
+*/      TODO
+--4. Los clientes cuyo límite de crédito sea mayor que los pagos que haya realizado. (Sin utilizar INNER JOIN).
+select c.codigo_cliente, c.nombre_cliente from cliente c, pago p where c.codigo_cliente = p.codigo_cliente
+and c.limite_credito > p.total
+group by c.codigo_cliente
+--5. Devuelve el producto que más unidades tiene en stock.
+select nombre from producto
+where cantidad_en_stock = (select max(cantidad_en_stock) from producto)
+--6. Devuelve el producto que menos unidades tiene en stock.
+select * from producto
+where cantidad_en_stock = (select min(cantidad_en_stock) from producto)
+--7. Devuelve el nombre, los apellidos y el email de los empleados que están a cargo de Alberto Soria.
+Select nombre,apellido1,apellido2,email from empleado
+where codigo_jefe = (select codigo_empleado from empleado where nombre = 'Alberto' and apellido1 = 'Soria')
+--Subconsultas con ALL y ANY
+
+--8. Devuelve el nombre del cliente con mayor límite de crédito.
+select nombre_cliente, limite_credito from cliente 
+where limite_credito >= all (select limite_credito from cliente)
+--9. Devuelve el nombre del producto que tenga el precio de venta más caro.
+select nombre,precio_venta from producto
+where precio_venta >= all (select precio_venta from producto)
+--10. Devuelve el producto que menos unidades tiene en stock.
+select codigo_producto,nombre, cantidad_en_stock from producto
+where cantidad_en_stock <= all (select cantidad_en_stock from  producto)
+--Subconsultas con IN y NOT IN
+--11. Devuelve el nombre, apellido1 y cargo de los empleados que no representen a ningún cliente.
+select nombre, apellido1, puesto from empleado 
+where codigo_empleado not in (select codigo_empleado_rep_ventas from cliente)  
+--12. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
+select * from cliente c
+where c.codigo_cliente not in (select p.codigo_cliente from pago p) 
+--13. Devuelve un listado que muestre solamente los clientes que sí han realizado algún pago.
+select * from cliente c
+where c.codigo_cliente in (select p.codigo_cliente from pago p) 
+--14. Devuelve un listado de los productos que nunca han aparecido en un pedido.
+select * from producto 
+where codigo_producto not in (select codigo_producto from detalle_pedido)
+
+--Subconsultas correlacionadas
+
+--Consultas variadas
+
+--1. Devuelve el listado de clientes indicando el nombre del cliente y cuántos pedidos ha realizado. 
+--Tenga en cuenta que pueden existir clientes que no han realizado ningún pedido.
+select codigo_cliente, count(codigo_pedido) from cliente natural inner join detalle_pedido
+group by codigo_cliente 
+--2. Devuelve un listado con los nombres de los clientes y el total pagado por cada uno de ellos. 
+--Tenga en cuenta que pueden existir clientes que no han realizado ningún pago.
+select c.codigo_cliente, c.nombre_cliente, sum(p.total) from cliente c left join pago p on c.codigo_cliente = p.codigo_cliente
+group by c.codigo_cliente, c.nombre_cliente, p.total
+order by c.codigo_cliente
+--3. Devuelve el nombre de los clientes que hayan hecho pedidos en 2008 ordenados alfabéticamente de menor a mayor.
+select codigo_cliente, nombre_cliente, codigo_pedido, fecha_pedido from cliente natural join pedido  
+where extract (year from fecha_pedido) = 2008
+order by codigo_cliente, fecha_pedido
+--4. Devuelve el nombre del cliente, el nombre y primer apellido de su representante de ventas y el número de 
+--teléfono de la oficina del representante de ventas, de aquellos clientes que no hayan realizado ningún pago.
+select c.nombre_cliente, e.nombre, e.apellido1, o.telefono 
+from cliente c left join pago p on p.codigo_cliente = c.codigo_cliente 
+inner join empleado e on c.codigo_empleado_rep_ventas = e.codigo_empleado 
+inner join oficina o on o.codigo_oficina = e.codigo_oficina
+where p.codigo_cliente is null
+--5. Devuelve el listado de clientes donde aparezca el nombre del cliente, el nombre y primer apellido de su 
+--representante de ventas y la ciudad donde está su oficina.
+select distinct c.nombre_cliente, e.nombre, e.apellido1, o.ciudad from cliente c inner join empleado e on c.codigo_empleado_rep_ventas = e.codigo_empleado 
+inner join oficina o on o.codigo_oficina = e.codigo_oficina 
+--6. Devuelve el nombre, apellidos, puesto y teléfono de la oficina de aquellos empleados que no sean 
+--representante de ventas de ningún cliente.
+select e.nombre, e.apellido1, e.apellido2, e.puesto, o.telefono from empleado e left join cliente c on c.codigo_empleado_rep_ventas = e.codigo_empleado  
+inner join oficina o on e.codigo_oficina = o.codigo_oficina 
+where c.codigo_empleado_rep_ventas is null
+--7. Devuelve un listado indicando todas las ciudades donde hay oficinas y el número de empleados que tiene. 
+select o.ciudad, count(e.codigo_empleado) from oficina o inner join empleado e on o.codigo_oficina = e.codigo_oficina
+group by o.ciudad
