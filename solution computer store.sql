@@ -413,3 +413,46 @@ where p.id_fabricante = f.id
 group by f.nombre				
 having count(precio) = (select count(precio) from producto p, fabricante f  
 		            	where p.id_fabricante = f.id and f.nombre = 'Lenovo')
+=============================================================================
+FUNCTIONS
+=========
+
+--Función que devuelve el número total de productos en la tabla productos:
+drop function num_productos();
+CREATE OR REPLACE FUNCTION num_productos()
+RETURNS INTEGER AS $$
+BEGIN
+  RETURN (SELECT COUNT(*) FROM producto);
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT NUM_PRODUCTOS();
+--Función que devuelve el valor medio del precio de los productos de un determinado fabricante que se recibirá como parámetro de entrada:
+drop function media_precio_fabricante(nom_fabricante TEXT)
+CREATE OR REPLACE FUNCTION media_precio_fabricante(nom_fabricante TEXT)
+RETURNS NUMERIC AS $$
+BEGIN
+  RETURN (SELECT AVG(precio) FROM producto WHERE nombre = nom_fabricante);
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT media_precio_fabricante('GeForce GTX 1080 Xtreme');
+--Función que devuelve el valor máximo del precio de los productos de un determinado fabricante que se recibirá como parámetro de entrada:
+CREATE OR REPLACE FUNCTION max_precio_fabricante(nom_fabricante TEXT)
+RETURNS NUMERIC AS $$
+BEGIN
+  RETURN (SELECT MAX(precio) FROM producto WHERE nombre = nom_fabricante);
+END;
+$$ LANGUAGE plpgsql;
+
+select max_precio_fabricante('GeForce GTX 1080 Xtreme')
+--Función que devuelve el valor mínimo del precio de los productos de un determinado fabricante que se recibirá como parámetro de entrada:
+drop function min_precio_fabricante(nom_fabricante TEXT)
+CREATE OR REPLACE FUNCTION min_precio_fabricante(nom_fabricante TEXT)
+RETURNS NUMERIC AS $$
+BEGIN
+  RETURN (SELECT MIN(precio) FROM producto WHERE nombre = nom_fabricante);
+END;
+$$ LANGUAGE plpgsql;
+
+select min_precio_fabricante('GeForce GTX 1080 Xtreme')
