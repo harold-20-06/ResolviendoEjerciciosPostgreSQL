@@ -1269,3 +1269,56 @@ where c.codigo_empleado_rep_ventas is null
 --7. Devuelve un listado indicando todas las ciudades donde hay oficinas y el número de empleados que tiene. 
 select o.ciudad, count(e.codigo_empleado) from oficina o inner join empleado e on o.codigo_oficina = e.codigo_oficina
 group by o.ciudad
+
+=============VIEWS===============
+
+--1. Escriba una vista que se llame listado_pagos_clientes que muestre un listado donde aparezcan todos los 
+--clientes y los pagos que ha realizado cada uno de ellos. La vista deberá tener las siguientes columnas: 
+--nombre y apellidos del cliente concatenados, teléfono, ciudad, pais, fecha_pago, total del pago, id de la transacción
+create view listado_pagos_clientes as
+select nombre_contacto ||' '||apellido_contacto as nombre, telefono,ciudad,pais,fecha_pago,total,id_transaccion 
+from cliente natural join pago; 
+
+select * from listado_pagos_clientes
+--2. Escriba una vista que se llame listado_pedidos_clientes que muestre un listado donde aparezcan todos los clientes 
+--y los pedidos que ha realizado cada uno de ellos. La vista debera tener las siguientes columnas: nombre y apellidos 
+--del cliente concatendados, teléfono, ciudad, pais, código del pedido, fecha del pedido, fecha esperada, fecha de 
+--entrega y la cantidad total del pedido, que será la suma del producto de todas las cantidades por el precio de cada 
+--unidad, que aparecen en cada línea de pedido.
+create or replace view listado_pedidos_clientes as
+select nombre_contacto ||' '||apellido_contacto as nombre, telefono,ciudad,pais,p.codigo_pedido,p.fecha_pedido, fecha_esperada, fecha_entrega,
+sum(cantidad*precio_unidad) as total
+--select *
+from cliente c inner join pedido p on c.codigo_cliente = p.codigo_cliente inner join detalle_pedido d
+on p.codigo_pedido = d.codigo_pedido
+group by c.codigo_cliente,p.codigo_pedido
+order by c.nombre_contacto,codigo_pedido
+select * from listado_pedidos_clientes
+--3. Utilice las vistas que ha creado en los pasos anteriores para devolver un listado de los clientes de la ciudad de 
+--Madrid que han realizado pagos.
+select * from listado_pagos_clientes where ciudad = 'Madrid'
+--4. Utilice las vistas que ha creado en los pasos anteriores para devolver un listado de los clientes que todavía no 
+--han recibido su pedido.
+select * from listado_pedidos_clientes where fecha_entrega is null
+--5. Utilice las vistas que ha creado en los pasos anteriores para calcular el número de pedidos que se ha realizado 
+--cada uno de los clientes.
+select nombre,count(codigo_pedido) from listado_pedidos_clientes 
+group by nombre
+order by nombre
+--6. Utilice las vistas que ha creado en los pasos anteriores para calcular el valor del pedido máximo y mínimo que ha 
+--realizado cada cliente.
+select nombre, max(total),min(total) from listado_pedidos_clientes
+group by nombre
+order by nombre
+--7. Modifique el nombre de las vista listado_pagos_clientes y asígnele el nombre listado_de_pagos. Una vez que haya 
+--modificado el nombre de la vista ejecute una consulta utilizando el nuevo nombre de la vista para comprobar que sigue 
+--funcionando correctamente.
+alter view listado_pagos_clientes rename to listado_de_pagos
+
+select * from listado_pagos_clientes
+select * from listado_de_pagos
+--8. Elimine las vistas que ha creado en los pasos anteriores.
+drop view listado_de_pagos, listado_pedidos_clientes
+
+select * from listado_de_pagos
+select * from listado_pedidos_clientes
