@@ -447,6 +447,7 @@ $$ LANGUAGE plpgsql;
 
 select max_precio_fabricante('GeForce GTX 1080 Xtreme')
 --Función que devuelve el valor mínimo del precio de los productos de un determinado fabricante que se recibirá como parámetro de entrada:
+--El parámetro de entrada será el nombre del fabricante.
 drop function min_precio_fabricante(nom_fabricante TEXT)
 CREATE OR REPLACE FUNCTION min_precio_fabricante(nom_fabricante TEXT)
 RETURNS NUMERIC AS $$
@@ -456,3 +457,4 @@ END;
 $$ LANGUAGE plpgsql;
 
 select min_precio_fabricante('GeForce GTX 1080 Xtreme')
+

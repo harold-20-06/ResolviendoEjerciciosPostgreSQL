@@ -1322,3 +1322,64 @@ drop view listado_de_pagos, listado_pedidos_clientes
 
 select * from listado_de_pagos
 select * from listado_pedidos_clientes
+=============================================================================================
+=============================procedures======================================================
+
+--Escribe un procedimiento que reciba el nombre de un país como parámetro de entrada y realice una 
+--consulta sobre la tabla cliente para obtener todos los clientes que existen en la tabla de ese país.
+drop function cliente_pais(val1 text)
+CREATE OR REPLACE FUNCTION obtener_clientes_por_pais(p_pais text)
+RETURNS SETOF cliente AS
+$$
+BEGIN
+    RETURN QUERY SELECT * FROM cliente WHERE pais = p_pais;
+END;
+$$
+LANGUAGE plpgsql;
+
+SELECT * from obtener_clientes_por_pais('USA');
+--Escribe un procedimiento que reciba como parámetro de entrada una forma de pago, que será una cadena de caracteres 
+--(Ejemplo: PayPal, Transferencia, etc). Y devuelva como salida el pago de máximo valor realizado para esa forma de 
+--pago. Deberá hacer uso de la tabla pago de la base de datos jardineria.
+--drop function obtener_pago_maximo_por_forma_de_pago(p_forma_de_pago VARCHAR(50))
+CREATE OR REPLACE FUNCTION obtener_pago_maximo_por_forma_de_pago(p_forma_de_pago VARCHAR(50))
+RETURNS NUMERIC(10,2) AS
+$$
+DECLARE
+    v_pago_maximo NUMERIC(10,2);
+BEGIN
+    SELECT MAX(total) 
+	INTO v_pago_maximo 
+	FROM pago 
+	WHERE forma_pago = p_forma_de_pago;
+    RETURN v_pago_maximo;
+END;
+$$ LANGUAGE plpgsql;
+
+select * from pago
+select obtener_pago_maximo_por_forma_de_pago('Transferencia')
+--Escribe un procedimiento que reciba como parámetro de entrada una forma de pago, que será una cadena de caracteres 
+--(Ejemplo: PayPal, Transferencia, etc). Y devuelva como salida los siguientes valores teniendo en cuenta la forma de 
+--pago seleccionada como parámetro de entrada:
+--el pago de máximo valor,
+--el pago de mínimo valor,
+--el valor medio de los pagos realizados,
+--la suma de todos los pagos,
+--el número de pagos realizados para esa forma de pago.
+--Deberá hacer uso de la tabla pago de la base de datos jardineria.
+select * from pago
+drop function obtener_info_pago(p_forma_pago varchar(30));
+CREATE OR REPLACE FUNCTION obtener_info_pago(p_forma_pago varchar(30))
+RETURNS TABLE (maximo numeric, minimo numeric, promedio numeric(10,2), suma numeric, cantidad integer)
+AS $$
+BEGIN
+  SELECT MAX(total), MIN(total), AVG(total), SUM(total), COUNT(*) 
+  INTO maximo, minimo, promedio, suma, cantidad
+  FROM pago
+  WHERE forma_pago = p_forma_pago;
+  RETURN NEXT;
+END;
+$$
+LANGUAGE plpgsql;
+select * from pago;
+SELECT * FROM obtener_info_pago('Transferencia');
