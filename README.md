@@ -1,5 +1,6 @@
 # Scripts con Ejercicios Resueltos en PostgreSQL
-![PLPGSQL](https://github.com/harold-20-06/ResolviendoEjerciciosPostgreSQL/blob/master/plpg.jpg)
+
+<center>https://github.com/harold-20-06/ResolviendoEjerciciosPostgreSQL/blob/master/plpg.jpg</center>
 
 Este repositorio contiene una colección de scripts de ejercicios resueltos sobre PostgreSQL, abarcando diversos aspectos del motor de base de datos. Los scripts son soluciones a problemas comunes y ejemplos de uso de las funcionalidades de PostgreSQL, lo que lo convierte en una herramienta útil para aquellos interesados en aprender y practicar con este popular sistema de gestión de bases de datos.
 
