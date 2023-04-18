@@ -1,0 +1,517 @@
+
+================Funciones de manejo de cadenas en PostgreSQL:=====================
+===========================================================================================================================
+====Función====	             =====Descripción======
+LENGTH(string)	Devuelve la longitud de la cadena.
+LEFT(string, length)	Devuelve los primeros caracteres de la cadena hasta la longitud especificada.
+RIGHT(string, length)	Devuelve los últimos caracteres de la cadena hasta la longitud especificada.
+SUBSTR(string, start, length)	Devuelve una subcadena de la cadena, comenzando en la posición especificada y con la longitud especificada.
+REPLACE(string, from, to)	Reemplaza todas las ocurrencias de la subcadena "from" por la subcadena "to" en la cadena.
+UPPER(string)	Convierte la cadena a mayúsculas.
+LOWER(string)	Convierte la cadena a minúsculas.
+
+INITCAP(string)	Convierte la primera letra de cada palabra en mayúsculas y las demás letras en minúsculas.
+TRIM(string)	Elimina los espacios en blanco al principio y al final de la cadena.
+BTRIM(string)	Elimina los espacios en blanco al final de la cadena.
+LTRIM(string)	Elimina los espacios en blanco al principio de la cadena.
+POSITION(substring in string)	Devuelve la posición de la primera ocurrencia de la subcadena en la cadena.
+STRPOS(string, substring)	Devuelve la posición de la primera ocurrencia de la subcadena en la cadena.
+CONCAT(string1, string2, ...)	Concatena dos o más cadenas.
+Funciones de manejo de cadenas en PostgreSQL (Parte 3):
+
+REVERSE(string)	Invierte el orden de los caracteres en la cadena.
+SPLIT_PART(string, delimiter, field)	Devuelve una subcadena de la cadena, separada por el delimitador y seleccionando el campo especificado.
+STRING_AGG(expression, delimiter)	Concatena varias cadenas en una sola cadena separada por el delimitador especificado.
+TRANSLATE(string, from, to)	Reemplaza cada carácter de la cadena que esté en la cadena "from" por el carácter correspondiente en la cadena "to".
+REGEXP_REPLACE(string, pattern, replacement)	Reemplaza todas las ocurrencias de la expresión regular "pattern" por la subcadena "replacement" en la cadena.
+REGEXP_MATCH(string, pattern)	Devuelve un arreglo de cadenas que coinciden con la expresión regular "pattern" en la cadena.
+===============================================================================================================================
+
+MANEJO DE ARRAYS
+================
+
+Función	Descripción
+array_agg(expression)	        Agrega los valores de una expresión en un arreglo
+array_append(arr, value)	Agrega un valor al final de un arreglo
+array_cat(array1, array2)	Concatena dos arreglos
+array_dims(array)	        Retorna las dimensiones del arreglo
+array_fill(value, array)	Llena un arreglo con un valor
+array_length(array, dim)	Retorna la longitud del arreglo en una dimensión especificada
+array_lower(array, dim)	        Retorna el índice menor del arreglo en una dimensión especificada
+array_ndims(array)	        Retorna el número de dimensiones del arreglo
+array_position(array, value)	Retorna la posición de un valor en un arreglo
+array_prepend(value, array)	Agrega un valor al inicio de un arreglo
+array_remove(array, value)	Remueve un valor de un arreglo
+array_replace(array, old_value, new_value)	Reemplaza un valor en un arreglo
+array_to_string(array, delimiter)	Convierte un arreglo en una cadena de caracteres separados por el delimitador especificado
+array_upper(array, dim)	Retorna el índice mayor del arreglo en una dimensión especificada
+=====================================================================================
+
+TIPOS DE DATOS
+==============
+
+Tipo de dato         Descripción                                    Rango de valores                            Ejemplo
+--------------------- ----------------------------------------------- -------------------------------------------- -------------------
+SMALLINT             Entero de 2 bytes                              -32,768 a +32,767                          42
+INTEGER o INT        Entero de 4 bytes                              -2,147,483,648 a +2,147,483,647            123456
+BIGINT               Entero de 8 bytes                              -9,223,372,036,854,775,808 a +9,223,372,036,854,775,807  9876543210
+DECIMAL o NUMERIC    Numérico de precisión arbitraria                Depende de la precisión y escala especificadas. Ejemplo: DECIMAL(25,6)  12345.678901
+REAL o FLOAT4        Punto flotante de precisión simple de 4 bytes  6 dígitos de precisión                     3.141592
+DOUBLE PRECISION o FLOAT8 Punto flotante de precisión doble de 8 bytes 15 dígitos de precisión                    3.141592653589793
+BOOLEAN              Valor verdadero o falso                        Verdadero o falso                          TRUE
+CHARACTER o CHAR     Cadena de caracteres de longitud fija          Depende de la longitud especificada        'Hola'
+VARCHAR o CHARACTER VARYING o TEXT Cadena de caracteres de longitud variable  Depende de la longitud especificada        'Hola Mundo'
+DATE                 Fecha con año, mes y día                      4713 AC a 5874897 DC                       '2023-04-11'
+TIME                 Hora del día con hora, minuto y segundo       00:00:00 a 24:00:00                        '14:30:45'
+TIMESTAMP            Fecha y hora con precisión opcional          4713 AC a 294276 AD                        '2023-04-11 14:30:45'
+INTERVAL             Duración o intervalo de tiempo                Depende de la unidad de tiempo especificada  '3 days 4 hours'
+UUID                 Identificador único universal                 Valor único generado automáticamente       'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
+ARRAY                Colección de valores de un tipo de dato específico  Depende de los valores del arreglo    '{1, 2, 3}'
+==================================================
+
+Estructuras condicionales en PostgreSQL:
+
+Las estructuras condicionales se utilizan para tomar decisiones basadas en una condición. En PostgreSQL existen dos estructuras condicionales principales: IF-THEN-ELSE y CASE.
+
+IF-THEN-ELSE:
+La estructura IF-THEN-ELSE se utiliza para ejecutar un bloque de código si se cumple una condición y otro bloque de código si no se cumple la condición. Su sintaxis básica es la siguiente:
+	
+IF condición THEN
+-- Código a ejecutar si se cumple la condición
+ELSE
+-- Código a ejecutar si no se cumple la condición
+END IF;
+
+Un ejemplo sencillo de su uso podría ser el siguiente:
+
+IF edad >= 18 THEN
+RAISE NOTICE 'La persona es mayor de edad';
+ELSE
+RAISE NOTICE 'La persona es menor de edad';
+END IF;
+
+En este ejemplo, se comprueba si la variable "edad" es mayor o igual a 18. Si se cumple la condición, se imprime el mensaje "La persona es mayor de edad", y si no se cumple la condición, se imprime el mensaje "La persona es menor de edad".
+
+CASE:
+La estructura CASE se utiliza para comparar una expresión con múltiples valores y ejecutar diferentes bloques de código dependiendo del valor. Su sintaxis básica es la siguiente:
+
+CASE expresión
+WHEN valor1 THEN
+-- Código a ejecutar si la expresión es igual a valor1
+WHEN valor2 THEN
+-- Código a ejecutar si la expresión es igual a valor2
+ELSE
+-- Código a ejecutar si la expresión no coincide con ningún valor anterior
+END CASE;
+
+Un ejemplo sencillo de su uso podría ser el siguiente:
+
+CASE dia_de_la_semana
+WHEN 'Lunes' THEN
+RAISE NOTICE 'Hoy es lunes';
+WHEN 'Martes' THEN
+RAISE NOTICE 'Hoy es martes';
+WHEN 'Miércoles' THEN
+RAISE NOTICE 'Hoy es miércoles';
+ELSE
+RAISE NOTICE 'Hoy no es ningún día de la semana';
+END CASE;
+
+En este ejemplo, se comprueba el valor de la variable "dia_de_la_semana" y se imprime un mensaje dependiendo del valor que tenga. Si tiene el valor 'Lunes', se imprime el mensaje "Hoy es lunes", si tiene el valor 'Martes', se imprime el mensaje "Hoy es martes", y así sucesivamente. Si el valor de la variable no coincide con ninguno de los valores anteriores, se imprime el mensaje "Hoy no es ningún día de la semana".
+=====================================================================================
+
+Estructuras repetitivas
+=======================
+
+Las estructuras repetitivas, también conocidas como bucles, son utilizadas para ejecutar un bloque de código varias veces hasta que se cumpla una condición. En PostgreSQL, existen tres estructuras repetitivas principales: LOOP, REPEAT y WHILE.
+
+* LOOP
+=======
+
+La estructura LOOP ejecuta un bloque de código repetidamente hasta que se utiliza la instrucción BREAK para salir del bucle. La sintaxis básica es la siguiente:
+
+LOOP
+-- Código a ejecutar repetidamente
+IF condición THEN
+BREAK; -- Sale del bucle si se cumple la condición
+END IF;
+END LOOP;
+
+A continuación, se muestra un ejemplo sencillo que utiliza la estructura LOOP para imprimir los números del 1 al 5:
+
+DO $$
+DECLARE
+i INTEGER := 1;
+BEGIN
+LOOP
+RAISE NOTICE 'El valor de i es %', i;
+i := i + 1;
+IF i > 5 THEN
+EXIT;
+END IF;
+END LOOP;
+END $$;
+====================================================================================================
+
+* WHILE
+=======
+
+La estructura WHILE ejecuta un bloque de código repetidamente mientras se cumpla una condición. La sintaxis básica es la siguiente:
+
+WHILE condición LOOP
+-- Código a ejecutar repetidamente mientras se cumpla la condición
+END LOOP;
+
+A continuación, se muestra un ejemplo sencillo que utiliza la estructura WHILE para imprimir los números del 1 al 5:
+
+DO $$
+DECLARE
+i INTEGER := 1;
+BEGIN
+WHILE i <= 5 LOOP
+RAISE NOTICE 'El valor de i es %', i;
+i := i + 1;
+END LOOP;
+END $$;
+================================================================================================
+
+* FOR
+======
+
+La sintaxis básica del ciclo FOR es la siguiente:
+
+FOR variable IN valores *by incremento LOOP   (By define de cuantos se incrementa ej. 2)       
+   -- Código a ejecutar en cada iteración
+END LOOP;
+
+Aquí tienes un ejemplo sencillo para que puedas ver cómo funciona el ciclo FOR en PL/pgSQL:
+
+DO $$
+DECLARE
+   contador INTEGER := 0;
+BEGIN
+   FOR i IN 1..5 LOOP -- Iteramos desde 1 hasta 5
+      contador := contador + i;
+   END LOOP;
+   RAISE NOTICE 'La suma de los números del 1 al 5 es: %', contador;
+END;
+$$ LANGUAGE plpgsql;
+===============================================================================================
+
+Manejo de errores en PostgreSQL
+===============================
+
+El manejo de errores en PostgreSQL es importante para detectar y corregir errores que puedan ocurrir durante la ejecución de una transacción. PostgreSQL maneja los errores a través del sistema de excepciones.
+
+La sintaxis básica para manejar excepciones en PostgreSQL es la siguiente:
+
+BEGIN
+-- Código a ejecutar
+EXCEPTION
+-- Manejo de excepciones
+END;
+El bloque BEGIN ... END define el alcance de la transacción y el código que se ejecutará. Si se produce una excepción, el control se transfiere a la sección EXCEPTION.
+
+A continuación, se muestran algunos ejemplos sencillos de manejo de excepciones en PostgreSQL:
+
+Manejo de una excepción genérica:
+
+BEGIN
+-- Código a ejecutar
+EXCEPTION
+WHEN OTHERS THEN
+RAISE NOTICE 'Ocurrió un error: %', SQLERRM;
+END;
+En este ejemplo, el bloque TRY ejecuta un código y si ocurre una excepción genérica, se muestra un mensaje de error utilizando la función RAISE NOTICE.
+
+Manejo de excepciones específicas:
+
+BEGIN
+-- Código a ejecutar
+EXCEPTION
+WHEN division_by_zero THEN
+RAISE NOTICE 'Error de división por cero.';
+WHEN invalid_text_representation THEN
+RAISE NOTICE 'Error de representación de texto inválido.';
+END;
+En este ejemplo, se manejan excepciones específicas utilizando cláusulas WHEN. Si se produce una excepción de división por cero, se muestra un mensaje de error y si se produce una excepción de representación de texto inválido, se muestra otro mensaje de error.
+
+Manejo de excepciones en una función:
+
+CREATE OR REPLACE FUNCTION divide(n1 INTEGER, n2 INTEGER)
+RETURNS INTEGER AS $$
+DECLARE
+resultado INTEGER;
+BEGIN
+resultado := n1 / n2;
+RETURN resultado;
+EXCEPTION
+WHEN division_by_zero THEN
+RAISE NOTICE 'Error de división por cero.';
+RETURN NULL;
+END $$ LANGUAGE plpgsql;
+En este ejemplo, se define una función que divide dos números enteros. Si se produce una excepción de división por cero, se muestra un mensaje de error y la función devuelve NULL.
+===================================================================================
+
+=====================FUNCIONES===========================
+En PostgreSQL, las funciones son bloques de código que realizan una tarea específica y pueden ser reutilizadas en diferentes partes de una base de datos o aplicación. Las funciones en PostgreSQL se definen utilizando la sintaxis de CREATE FUNCTION y pueden tomar argumentos y devolver valores.
+
+Sintaxis
+--------
+
+La sintaxis básica de CREATE FUNCTION en PostgreSQL es la siguiente:
+
+CREATE FUNCTION nombre_funcion(argumentos)
+RETURNS tipo_retorno AS $$
+DECLARE
+  -- variables
+BEGIN
+  -- código
+END;
+$$ LANGUAGE plpgsql;
+
+Ejemplo
+-------
+
+Aquí hay un ejemplo sencillo de una función que toma dos argumentos enteros y devuelve su suma:
+
+CREATE FUNCTION sumar_enteros(x INTEGER, y INTEGER)
+RETURNS INTEGER AS $$
+DECLARE
+  resultado INTEGER;
+BEGIN
+  resultado := x + y;
+  RETURN resultado;
+END;
+$$ LANGUAGE plpgsql;
+===================================================================================================
+=================================PROCEDIMIENTOS===========================================
+* tomar en cuenta que para versiones anteriores a la 11 no soporta procedures asi que se implementa como functions, tomando los siguientes returns 
+
+===devulve varias tuplas====
+CREATE OR REPLACE FUNCTION obtener_clientes_por_pais(p_pais text)
+RETURNS SETOF cliente AS
+$$
+BEGIN
+    RETURN QUERY SELECT * FROM cliente WHERE pais = p_pais;
+END;
+$$
+LANGUAGE plpgsql;
+========devuelve un valor ======
+CREATE OR REPLACE FUNCTION obtener_pago_maximo_por_forma_de_pago(p_forma_de_pago VARCHAR(50))
+RETURNS NUMERIC(10,2) AS
+$$
+DECLARE
+    v_pago_maximo NUMERIC(10,2);
+BEGIN
+    SELECT MAX(total) 
+	INTO v_pago_maximo 
+	FROM pago 
+	WHERE forma_pago = p_forma_de_pago;
+    RETURN v_pago_maximo;
+END;
+$$ LANGUAGE plpgsql;
+==============devuelve una tabla===============
+CREATE OR REPLACE FUNCTION obtener_info_pago(p_forma_pago varchar(30))
+RETURNS TABLE (maximo numeric, minimo numeric, promedio numeric(10,2), suma numeric, cantidad integer)
+AS $$
+BEGIN
+  SELECT MAX(total), MIN(total), AVG(total), SUM(total), COUNT(*) 
+  INTO maximo, minimo, promedio, suma, cantidad
+  FROM pago
+  WHERE forma_pago = p_forma_pago;
+  RETURN NEXT;
+END;
+$$
+LANGUAGE plpgsql;
+==================================================================================================================
+POSTGRESQL 11 en adelante=======>
+
+Los procedimientos almacenados en PostgreSQL son bloques de código que se pueden almacenar en la base de datos y que se pueden invocar desde una aplicación o desde la propia base de datos. Estos procedimientos se utilizan para realizar tareas complejas que involucran múltiples consultas y/o actualizaciones de la base de datos.
+
+La sintaxis para crear un procedimiento almacenado en PostgreSQL es la siguiente:
+
+CREATE OR REPLACE PROCEDURE nombre_procedimiento(parámetro1 tipo_dato1, parámetro2 tipo_dato2, ...) AS
+DECLARE
+    -- variables locales
+BEGIN
+    -- código del procedimiento
+END;
+
+A continuación, se muestra un ejemplo de un procedimiento almacenado sencillo que toma dos parámetros, los suma y devuelve el resultado:
+
+CREATE OR REPLACE PROCEDURE sumar_numeros(a INTEGER, b INTEGER) AS
+DECLARE
+    resultado INTEGER;
+BEGIN
+    resultado := a + b;
+    RETURN resultado;
+END;
+
+Este procedimiento puede ser invocado desde una aplicación o desde la propia base de datos utilizando el siguiente comando:
+
+SELECT sumar_numeros(2, 3);
+El resultado de esta consulta será 5.
+
+También es posible crear procedimientos almacenados que no devuelvan ningún valor utilizando el siguiente formato:
+
+CREATE OR REPLACE PROCEDURE nombre_procedimiento(parámetro1 tipo_dato1, parámetro2 tipo_dato2, ...) AS
+DECLARE
+    -- variables locales
+BEGIN
+    -- código del procedimiento
+END;
+
+A continuación, se muestra un ejemplo de un procedimiento almacenado sencillo que toma un parámetro y actualiza un registro en una tabla:
+
+CREATE OR REPLACE PROCEDURE actualizar_cliente(id_cliente INTEGER, nuevo_nombre TEXT) AS
+BEGIN
+    UPDATE clientes SET nombre = nuevo_nombre WHERE id = id_cliente;
+END;
+
+Este procedimiento puede ser invocado desde una aplicación o desde la propia base de datos utilizando el siguiente comando:
+
+CALL actualizar_cliente(1, 'Juan Pérez');
+=========================================================================================================
+========================TRANSACCIONES=========================================
+
+Sintaxis de las transacciones en PostgreSQL
+-------------------------------------------
+
+En PostgreSQL, las transacciones se inician automáticamente cuando se realiza una operación que modifica la base de datos, como una inserción, actualización o eliminación. También se pueden iniciar explícitamente utilizando la siguiente sintaxis:
+
+BEGIN;
+-- Operaciones de base de datos aquí
+COMMIT;
+El comando BEGIN inicia una transacción, mientras que el comando COMMIT confirma la transacción y hace que todas las operaciones realizadas en ella sean permanentes. Si se produce un error durante las operaciones de la transacción, se puede revertir utilizando el comando ROLLBACK.
+
+BEGIN;
+-- Operaciones de base de datos aquí
+ROLLBACK;
+El comando ROLLBACK deshace todas las operaciones realizadas en la transacción y la cancela.
+
+Ejemplos sencillos de transacciones en PostgreSQL
+Aquí hay algunos ejemplos sencillos que ilustran cómo se pueden utilizar las transacciones en PostgreSQL.
+
+Ejemplo 1: Inserción de datos en una tabla
+En este ejemplo, utilizaremos una transacción para insertar dos filas en una tabla llamada "usuarios".
+
+BEGIN;
+INSERT INTO usuarios (nombre, edad) VALUES ('Juan', 25);
+INSERT INTO usuarios (nombre, edad) VALUES ('Ana', 30);
+COMMIT;
+
+Si la transacción se completa sin errores, las dos filas serán insertadas en la tabla de manera permanente. Si se produce un error en alguna de las operaciones de inserción, la transacción se revertirá automáticamente y no se insertará ninguna fila en la tabla.
+
+Uso de ROLLBACK
+---------------
+Supongamos que tenemos una tabla llamada "ventas" que almacena información sobre las ventas de una tienda. Queremos insertar dos nuevas filas en la tabla, una para la venta del día anterior y otra para la venta del día actual. Sin embargo, en la inserción de la segunda fila, se produce un error y la transacción se debe revertir. Veamos cómo se hace con ROLLBACK:
+
+BEGIN;
+INSERT INTO ventas (fecha, monto) VALUES ('2023-03-30', 500.00);
+INSERT INTO ventas (fecha, monto) VALUES ('2023-03-31', '1000.00'); -- Error: el monto no es un número válido
+ROLLBACK;
+En este caso, la transacción se inicia con BEGIN. Luego, se insertan dos filas en la tabla, una para la venta del día anterior y otra para la venta del día actual. Sin embargo, en la inserción de la segunda fila, se produce un error porque el monto no es un número válido. En este punto, se puede revertir la transacción utilizando ROLLBACK, lo que deshace todas las operaciones realizadas en la transacción.
+==================================================================================
+============================CURSORES====================================
+
+Un cursor en PostgreSQL es un objeto que permite a las aplicaciones recuperar y manipular filas de una consulta en una forma iterativa, en lugar de 
+recuperar todas las filas a la vez. Esto puede ser útil cuando se trabaja con grandes conjuntos de datos y se necesita un mayor control sobre el proceso de
+recuperación de datos.
+
+Recorrer un cursor usando un bucle
+
+-- Declarar un cursor llamado "mi_cursor" que recupera todas las filas de la tabla "clientes"
+DECLARE mi_cursor CURSOR FOR SELECT * FROM clientes;
+
+-- Abrir el cursor
+OPEN mi_cursor;
+
+-- Declarar variables para almacenar los datos de las filas
+DECLARE id_cliente INT;
+DECLARE nombre_cliente VARCHAR(100);
+
+-- Recorrer el cursor usando un bucle
+FETCH NEXT FROM mi_cursor INTO id_cliente, nombre_cliente;
+
+WHILE FOUND
+BEGIN
+   -- Procesar los datos de la fila actual
+   RAISE NOTICE 'ID Cliente: %, Nombre: %', id_cliente, nombre_cliente;
+
+   -- Obtener la siguiente fila
+   FETCH NEXT FROM mi_cursor INTO id_cliente, nombre_cliente;
+END WHILE;
+
+-- Cerrar el cursor
+CLOSE mi_cursor;
+
+-- Liberar recursos del cursor
+DEALLOCATE mi_cursor;
+
+=============================================================
+========Recorrido con for in===================
+
+-- Definición del cursor
+DECLARE
+  cur_empleados CURSOR FOR SELECT id_empleado, nombre, edad, salario FROM empleados;
+  row_empleado RECORD;
+BEGIN
+  -- Abrir el cursor
+  OPEN cur_empleados;
+
+  -- Loop FOR-IN para recorrer el cursor
+  FOR row_empleado IN cur_empleados LOOP
+    -- Procesar la fila actual
+    -- Puedes acceder a las columnas de la fila utilizando la notación row_empleado.nombre_columna
+    -- Por ejemplo, mostrar los valores en la consola
+    RAISE NOTICE 'ID: %, Nombre: %, Edad: %, Salario: %', row_empleado.id_empleado, row_empleado.nombre, row_empleado.edad, row_empleado.salario;
+
+    -- Puedes realizar cualquier otra operación o lógica de negocio aquí
+
+  END LOOP;
+
+  -- Cerrar el cursor
+  CLOSE cur_empleados;
+END;
+==============================================================================
+====================TRIGGERS======================
+
+son objetos de base de datos que se utilizan para automatizar acciones en respuesta a eventos específicos, como la inserción, actualización o eliminación 
+de datos en una tabla.
+
+CREATE TRIGGER nombre_trigger
+{BEFORE | AFTER} {INSERT | UPDATE | DELETE}
+ON nombre_tabla
+FOR EACH ROW
+EXECUTE FUNCTION nombre_funcion();
+
+
+Aquí hay un ejemplo sencillo de un trigger en PostgreSQL que realiza una auditoría de cambios en una tabla usuarios 
+cada vez que se realiza una actualización en ella:
+
+-- Crear una tabla de auditoría para almacenar los cambios
+CREATE TABLE auditoria_usuarios (
+    id SERIAL PRIMARY KEY,
+    fecha_hora TIMESTAMP,
+    accion CHAR(6),
+    usuario_id INT
+);
+
+-- Crear la función de auditoría
+CREATE OR REPLACE FUNCTION auditar_cambios()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'UPDATE') THEN
+        INSERT INTO auditoria_usuarios (fecha_hora, accion, usuario_id)
+        VALUES (NOW(), 'UPDATE', OLD.id);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Crear el trigger que activa la función de auditoría
+CREATE TRIGGER trigger_auditoria
+AFTER UPDATE ON usuarios
+FOR EACH ROW
+EXECUTE FUNCTION auditar_cambios();

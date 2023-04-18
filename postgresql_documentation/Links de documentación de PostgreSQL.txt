@@ -1,0 +1,6 @@
+Documentación oficial de PostgreSQL: https://www.postgresql.org/docs/
+Descarga de PostgreSQL: https://www.postgresql.org/download/
+Página de ejemplos y tutoriales de PostgreSQL: https://www.postgresqltutorial.com/
+Guía de inicio rápido de PostgreSQL: https://www.postgresqltutorial.com/postgresql-getting-started/
+PostgreSQL Cheat Sheet: https://www.postgresqltutorial.com/postgresql-cheat-sheet/
+Página de preguntas frecuentes de PostgreSQL: https://wiki.postgresql.org/wiki/FAQ
