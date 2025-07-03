@@ -12,7 +12,7 @@ Colección de scripts resueltos para aprender PostgreSQL, desde consultas básic
 - [Gestión de empleados.sql](<./Gestión de empleados.sql>) - Consultas de gestión de empleados
 - [jardineria.sql](<./jardineria.sql>) - Scripts para base de jardinería
 - [ESTRUCTURAS CONDICIONALES Y REPETITIVAS.sql](<./ESTRUCTURAS CONDICIONALES Y REPETITIVAS.sql>) - IF, CASE, LOOP, WHILE, FOR
-- [functions and procedures.sql](<./functions and procedures.sql>) - Funciones y procedimientos
+- [Functions and Procedures.sql](<./Functions and Procedures.sql>) - Funciones y procedimientos
 - [TRANSACCIONES.sql](<./TRANSACCIONES.sql>) - COMMIT y ROLLBACK
 - [CURSORES.sql](<./CURSORES.sql>) - Cursores con FETCH y FOR IN
 - [TRIGGERS.sql](<./TRIGGERS.sql>) - Triggers para auditoría
