@@ -1,61 +1,47 @@
-# Scripts con Ejercicios Resueltos en PostgreSQL
 
-<p align="center">
-  <img src="https://github.com/harold-20-06/ResolviendoEjerciciosPostgreSQL/blob/master/plpg.jpg">
-</p>
+# 📚 Scripts con Ejercicios Resueltos en PostgreSQL
 
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-%23316192?logo=postgresql)](https://www.postgresql.org/)
+[![License](https://img.shields.io/badge/License-MIT-blue)](https://opensource.org/licenses/MIT)
 
-Este repositorio contiene una colección de scripts de ejercicios resueltos sobre PostgreSQL, abarcando diversos aspectos del motor de base de datos. Los scripts son soluciones a problemas comunes y ejemplos de uso de las funcionalidades de PostgreSQL, lo que lo convierte en una herramienta útil para aquellos interesados en aprender y practicar con este popular sistema de gestión de bases de datos.
+Colección de scripts resueltos para aprender PostgreSQL, desde consultas básicas hasta técnicas avanzadas como triggers, transacciones y procedimientos almacenados.
 
-Con estos scripts, podrás encontrar ejemplos de consultas SQL, manipulación de datos, creación y gestión de tablas, creación de índices, implementación de stored procedures, functions, transacciones, manejo de errores, manejo de cursores, creacion de triggers, y más. 
+## 🗂️ Contenido
+- [solution computer store.sql](<./solution computer store.sql>) - Gestión de tienda de informática
+- [Gestion_de ventas.sql](<./"Gestion de ventas.sql">) - Consultas de análisis de ventas
+- [Gestion_de empleados.sql](<./Gestion de empleados.sql>) - Consultas de gestión de empleados
+- [jardineria.sql](<./jardineria.sql>) - Scripts para base de jardinería
+- [ESTRUCTURAS CONDICIONALES Y REPETITIVAS.sql](<./ESRUCTURAS CONDICIONALES Y REPETITIVAS.sql>) - IF, CASE, LOOP, WHILE, FOR
+- [functions_and procedures.sql](<./functions and procedures.sql>) - Funciones y procedimientos
+- [TRANSACCIONES.sql](<./TRANSACCIONES.sql>) - COMMIT y ROLLBACK
+- [CURSORES.sql](<./CURSORES.sql>) - Cursores con FETCH y FOR IN
+- [TRIGGERS.sql](<./TRIGGERS.sql>) - Triggers para auditoría
 
-Este repositorio es ideal para mejorar sus habilidades en el motor de base de datos, así como para aquellos que buscan ejemplos prácticos y soluciones a problemas comunes en el uso de PostgreSQL.
+## 🚀 Cómo Usar
+1. Clona el repositorio:
 
+git clone https://github.com/harold-20-06/ResolviendoEjerciciosPostgreSQL.git
 
-## Contenido del Repositorio
+  2. Ejecuta los scripts en PgAdmin 4 o con:
 
-**solution computer store.sql:** scripts relacionados con la gestión de datos en una base de datos de una tienda de informática en PostgreSQL.
+psql -U [tu_usuario] -d [tu_base_de_datos] -f ruta/al/script.sql
+  
+## 🛠️ Tecnologías
+- PostgreSQL 15
+- PgAdmin 4 v6
+- PL/pgSQL
 
-**Gestion de ventas.sql:** contiene consultas multitablas relacionadas con la gestión de ventas en una base de datos PostgreSQL.
+## 🤝 Contribuir
+Haz fork del repositorio
 
-**Gestión de empleados.sql:** contiene consultas multitablas relacionadas con la gestión de empleados en una base de datos PostgreSQL.
+Crea una rama: git checkout -b mi-mejora
 
-**jardineria.sql:** contiene scripts relacionados con la gestión de datos en una base de datos de jardinería en PostgreSQL.
+Haz commit y push
 
-**ESTRUCTURAS CONDICIONALES Y REPETITIVAS.sql:** contiene scripts relacionados con el uso de estructuras if, case, loop, while y for en PostgreSQL.
+Abre un Pull Request
 
-**Functions and Procedures.sql:** contiene scripts relacionados con el uso de funciones, procedimientos y manejo de errores almacenados en PostgreSQL.
+## 📜 Licencia
+Este proyecto está licenciado bajo la [MIT License](https://opensource.org/licenses/MIT) — consulta el archivo [`LICENSE`](./LICENSE) para más información.
 
-**TRANSACCIONES.sql:** contiene scripts relacionados con el uso de transacciones commit y rollback en PostgreSQL.
-
-**CURSORES.sql:** contiene scripts relacionados con el uso de cursores con fetch y for in en PostgreSQL.
-
-**TRIGGERS.sql:** contiene scripts relacionados con el uso de triggers en PostgreSQL.
-
-## Menú de Navegación
-
-Para facilitar la navegación en este repositorio, se ha implementado un menú de navegación en forma de tabla de contenidos. Puedes acceder a él en el archivo MENU.md en la raíz del repositorio, el cual contiene enlaces directos a cada uno de los archivos de script por tema.
-
-## Construido con 🛠️
-
- - PgAdmin 4 v6
- - postgresql 15
- - plpgsql
-
-# Contribuciones
-Si deseas contribuir a este repositorio, por favor sigue las siguientes pautas:
-
-Haz un fork de este repositorio.
-
-Crea una rama con un nombre descriptivo para tu contribución.
-
-Realiza tus cambios en la rama creada.
-
-Haz un pull request a la rama principal de este repositorio.
-
-Tu contribución será revisada y se te brindará retroalimentación.
-
-
-
----
-con ❤️ por [harold-20-06](https://github.com/harold-20-06) 
+## 👨‍💻 Autor
+Creado con ❤️ por [@harold-20-06](https://github.com/harold-20-06)
